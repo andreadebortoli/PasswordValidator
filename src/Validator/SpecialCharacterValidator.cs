@@ -1,8 +1,9 @@
 ﻿using System.Text.RegularExpressions;
+using Validator.Interfaces;
 
 namespace Validator;
 
-public class SpecialCharacterValidator : IValidator
+public class SpecialCharacterValidator : ISpecialCharactersValidator
 {
     public Response Validate(string? password)
     {

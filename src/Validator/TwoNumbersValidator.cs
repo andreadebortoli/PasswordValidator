@@ -1,6 +1,8 @@
-﻿namespace Validator;
+﻿using Validator.Interfaces;
 
-public class TwoNumbersValidator : IValidator
+namespace Validator;
+
+public class TwoNumbersValidator : ITwoNumbersValidator
 {
     public Response Validate(string? password)
     {

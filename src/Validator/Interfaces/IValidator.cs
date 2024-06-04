@@ -1,4 +1,4 @@
-﻿namespace Validator
+﻿namespace Validator.Interfaces
 {
     public interface IValidator
     {

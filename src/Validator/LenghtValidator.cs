@@ -1,6 +1,8 @@
-﻿namespace Validator;
+﻿using Validator.Interfaces;
 
-public class LenghtValidator : IValidator
+namespace Validator;
+
+public class LenghtValidator : ILenghtValidator
 {
     public Response Validate(string? password)
     {
