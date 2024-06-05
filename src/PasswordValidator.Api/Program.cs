@@ -14,7 +14,7 @@ builder.Services.AddKeyedScoped<IValidator, TwoNumbersValidator>("twoNumbers");
 builder.Services.AddKeyedScoped<IValidator, SpecialCharacterValidator>("specialCharacters");
 
 
-builder.Services.AddScoped<ResponseBuilder>(serviceProvider =>
+builder.Services.AddScoped<IResponseBuilder, ResponseBuilder>(serviceProvider =>
     new ResponseBuilder(
         serviceProvider.GetRequiredKeyedService<IValidator>("length"),
         serviceProvider.GetRequiredKeyedService<IValidator>("twoNumbers"),
@@ -33,20 +33,17 @@ app.UseHttpsRedirection();
 
 
 app.MapGet("/validator", (
-        [FromServices] ResponseBuilder responseBuilder,
+        [FromServices] IResponseBuilder responseBuilder,
         string password) =>
     {
         var result = responseBuilder
-            .ValidateLenght(password)
+            .ValidateLength(password)
             .ValidateDigits(password)
-            .ValidateSpecialCharacters(password);
+            .ValidateSpecialCharacters(password)
+            .Build();
 
 
-        return Results.Ok(new
-        {
-            IsValid = result.IsValid,
-            Messages = result.Message
-        });
+        return Results.Ok(result);
     })
 .WithName("PasswordValidator")
 .WithOpenApi();

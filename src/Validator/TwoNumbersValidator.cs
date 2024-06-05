@@ -2,7 +2,7 @@
 
 namespace Validator;
 
-public class TwoNumbersValidator : ITwoNumbersValidator
+public class TwoNumbersValidator : IValidator
 {
     public Response Validate(string? password)
     {

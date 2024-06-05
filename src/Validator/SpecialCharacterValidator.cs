@@ -3,7 +3,7 @@ using Validator.Interfaces;
 
 namespace Validator;
 
-public class SpecialCharacterValidator : ISpecialCharactersValidator
+public class SpecialCharacterValidator : IValidator
 {
     public Response Validate(string? password)
     {
