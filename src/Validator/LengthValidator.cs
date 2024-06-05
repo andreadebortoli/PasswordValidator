@@ -2,7 +2,7 @@
 
 namespace Validator;
 
-public class LenghtValidator : IValidator 
+public class LengthValidator : IValidator 
 {
     public Response Validate(string? password)
     {

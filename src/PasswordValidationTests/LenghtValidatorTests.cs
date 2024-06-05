@@ -11,7 +11,7 @@ public class LenghtValidatorTests
     [SetUp]
     public void Setup()
     {
-        _sut = new LenghtValidator();
+        _sut = new LengthValidator();
     }
 
     [Test]

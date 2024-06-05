@@ -9,16 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddKeyedScoped<IValidator, LenghtValidator>("length");
-builder.Services.AddKeyedScoped<IValidator, TwoNumbersValidator>("twoNumbers");
-builder.Services.AddKeyedScoped<IValidator, SpecialCharacterValidator>("specialCharacters");
+builder.Services.AddScoped<Dictionary<string, IValidator>>(sp => new Dictionary<string, IValidator>
+{
+    { "length", new LengthValidator() },
+    { "twoNumbers", new TwoNumbersValidator() },
+    { "specialCharacters", new SpecialCharacterValidator() }
+});
 
 
-builder.Services.AddScoped<IResponseBuilder, ResponseBuilder>(serviceProvider =>
-    new ResponseBuilder(
-        serviceProvider.GetRequiredKeyedService<IValidator>("length"),
-        serviceProvider.GetRequiredKeyedService<IValidator>("twoNumbers"),
-        serviceProvider.GetRequiredKeyedService<IValidator>("specialCharacters")));
+builder.Services.AddScoped<IValidatorFactory, ValidatorFactory>();
+
+
+builder.Services.AddScoped<IResponseBuilder, ResponseBuilder>();
 
 var app = builder.Build();
 
@@ -49,4 +51,3 @@ app.MapGet("/validator", (
 .WithOpenApi();
 
 app.Run();
-

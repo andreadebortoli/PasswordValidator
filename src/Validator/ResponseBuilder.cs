@@ -1,5 +1,4 @@
 ﻿using Validator.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Validator;
 
@@ -12,13 +11,11 @@ public class ResponseBuilder : IResponseBuilder
     private readonly List<string> _messages = new();
 
     public ResponseBuilder(
-        [FromKeyedServices("length")] IValidator lengthValidator,
-        [FromKeyedServices("twoNumbers")] IValidator twoNumbersValidator,
-        [FromKeyedServices("specialCharacters")] IValidator specialCharactersValidator)
+      IValidatorFactory validatorFactory)
     {
-        _lengthValidator = lengthValidator;
-        _twoNumbersValidator = twoNumbersValidator;
-        _specialCharactersValidator = specialCharactersValidator;
+        _lengthValidator = validatorFactory.GetValidator("length");
+        _twoNumbersValidator = validatorFactory.GetValidator("twoNumbers");
+        _specialCharactersValidator = validatorFactory.GetValidator("specialCharacters");
     }
 
     public ResponseBuilder ValidateLength(string password)
