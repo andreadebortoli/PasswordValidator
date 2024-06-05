@@ -1,4 +1,6 @@
-﻿namespace Validator;
+﻿using Validator.Interfaces;
+
+namespace Validator;
 
 public class LenghtValidator : IValidator
 {

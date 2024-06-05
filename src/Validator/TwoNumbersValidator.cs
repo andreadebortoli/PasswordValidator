@@ -1,9 +1,20 @@
-﻿namespace Validator;
+﻿using Validator.Interfaces;
+
+namespace Validator;
 
 public class TwoNumbersValidator : IValidator
 {
     public Response Validate(string? password)
     {
+        if (password is null)
+        {
+            return new Response
+            {
+                IsValid = false,
+                Message = "Password cannot be null"
+            };
+        }
+
         var numbersInPassword = password!.Where(c => char.IsDigit(c)).ToList();
 
         if (numbersInPassword.Count < 2)

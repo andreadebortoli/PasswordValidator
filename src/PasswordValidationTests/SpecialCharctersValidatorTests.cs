@@ -1,4 +1,5 @@
 ﻿using Validator;
+using Validator.Interfaces;
 
 namespace PasswordValidationTests;
 
@@ -33,6 +34,43 @@ public class SpecialCharctersValidatorTests
     {
         var response = _sut.Validate("Password");
 
-        Assert.False(response.IsValid);
+        var invalidPasswordResponse = new Response()
+        {
+            IsValid = false,
+            Message = "password must contain at least one special character"
+        };
+
+        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
+        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
+    }
+
+    [Test]
+    public void PasswordShouldntBeEmpyString()
+    {
+        var response = _sut.Validate(string.Empty);
+
+        var invalidPasswordResponse = new Response()
+        {
+            IsValid = false,
+            Message = "password must contain at least one special character"
+        };
+
+        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
+        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
+    }
+
+    [Test]
+    public void PasswordShouldntBeNull()
+    {
+        var response = _sut.Validate(null);
+
+        var invalidPasswordResponse = new Response()
+        {
+            IsValid = false,
+            Message = "Password cannot be null"
+        };
+
+        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
+        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
     }
 }

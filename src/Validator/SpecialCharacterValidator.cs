@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Validator.Interfaces;
 
 namespace Validator;
 
@@ -6,6 +7,15 @@ public class SpecialCharacterValidator : IValidator
 {
     public Response Validate(string? password)
     {
+        if (password is null)
+        {
+            return new Response
+            {
+                IsValid = false,
+                Message = "Password cannot be null"
+            };
+        }
+
         var pattern = @"[ -\/:-@\[-\`{-~]";
 
         var matches = Regex.Matches(password!, pattern);

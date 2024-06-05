@@ -1,4 +1,5 @@
 ﻿using Validator;
+using Validator.Interfaces;
 
 namespace PasswordValidationTests;
 
@@ -33,7 +34,43 @@ public class TwoNumbersValidatorTests
     {
         var response = _sut.Validate("Password1");
 
-        Assert.False(response.IsValid);
+        var invalidPasswordResponse = new Response()
+        {
+            IsValid = false,
+            Message = "The password must contain at least 2 numbers"
+        };
+
+        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
+        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
     }
 
+    [Test]
+    public void PasswordShouldntBeEmpyString()
+    {
+        var response = _sut.Validate(string.Empty);
+
+        var invalidPasswordResponse = new Response()
+        {
+            IsValid = false,
+            Message = "The password must contain at least 2 numbers"
+        };
+
+        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
+        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
+    }
+
+    [Test]
+    public void PasswordShouldntBeNull()
+    {
+        var response = _sut.Validate(null);
+
+        var invalidPasswordResponse = new Response()
+        {
+            IsValid = false,
+            Message = "Password cannot be null"
+        };
+
+        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
+        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
+    }
 }
