@@ -1,34 +1,34 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Validator.Interfaces;
+﻿using Validator.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Validator;
 
-public class ResponseBuilder
+public class ResponseBuilder : IResponseBuilder
 {
     private readonly IValidator _lengthValidator;
     private readonly IValidator _twoNumbersValidator;
-    private readonly IValidator _specialCharacterValidator;
+    private readonly IValidator _specialCharactersValidator;
     private bool _isValid = true;
-    private string _message = string.Empty;
+    private readonly List<string> _messages = new();
 
     public ResponseBuilder(
-        [FromKeyedServices("lenght")] IValidator lengthValidator,
+        [FromKeyedServices("length")] IValidator lengthValidator,
         [FromKeyedServices("twoNumbers")] IValidator twoNumbersValidator,
-        [FromKeyedServices("SpecialCharacters")] IValidator specialCharacterValidator)
+        [FromKeyedServices("specialCharacters")] IValidator specialCharactersValidator)
     {
         _lengthValidator = lengthValidator;
         _twoNumbersValidator = twoNumbersValidator;
-        _specialCharacterValidator = specialCharacterValidator;
+        _specialCharactersValidator = specialCharactersValidator;
     }
-    public ResponseBuilder ValidateLenght(string password)
+
+    public ResponseBuilder ValidateLength(string password)
     {
         var result = _lengthValidator.Validate(password);
         if (!result.IsValid)
         {
             _isValid = false;
-            _message += result.Message;
+            _messages.Add(result.Message);
         }
-        return this;
         return this;
     }
 
@@ -38,22 +38,28 @@ public class ResponseBuilder
         if (!result.IsValid)
         {
             _isValid = false;
-            _message += result.Message;
+            _messages.Add(result.Message);
         }
         return this;
     }
 
     public ResponseBuilder ValidateSpecialCharacters(string password)
     {
-        var result = _specialCharacterValidator.Validate(password);
+        var result = _specialCharactersValidator.Validate(password);
         if (!result.IsValid)
         {
             _isValid = false;
-            _message += result.Message;
+            _messages.Add(result.Message);
         }
         return this;
     }
 
-    public bool IsValid => _isValid;
-    public string Message => _message;
+    public Response Build()
+    {
+        return new Response
+        {
+            IsValid = _isValid,
+            Message = string.Join("\n", _messages)
+        };
+    }
 }
