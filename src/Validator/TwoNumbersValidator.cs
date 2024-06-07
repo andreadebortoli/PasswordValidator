@@ -6,7 +6,7 @@ public class TwoNumbersValidator : IValidator
 {
     public Response Validate(string password)
     {
-        if (password.Count(char.IsDigit) >= 2)
+        if (password is not null && password.Count(char.IsDigit) >= 2)
         {
             return new Response(
                 true,

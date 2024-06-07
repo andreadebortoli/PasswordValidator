@@ -36,4 +36,19 @@ public class TwoNumbersValidatorTests
 
         Assert.That(invalidPasswordResponse, Is.EqualTo(response));
     }
+
+    [Test]
+    [TestCase("")]
+    [TestCase(null)]
+    public void PasswordShouldntBeEmpyStringOrNull(string password)
+    {
+        var response = _sut.Validate(password);
+
+        var invalidPasswordResponse = new Response(
+            false,
+            "The password must contain at least 2 numbers"
+        );
+
+        Assert.That(invalidPasswordResponse, Is.EqualTo(response));
+    }
 }

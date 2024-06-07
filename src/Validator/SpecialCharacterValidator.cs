@@ -6,7 +6,7 @@ public class SpecialCharacterValidator : IValidator
 {
     public Response Validate(string password)
     {
-        if (password.Any(char.IsPunctuation) )
+        if (password is not null && password.Any(char.IsPunctuation) )
         {
             return new Response(
                 true,

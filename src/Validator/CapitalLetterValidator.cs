@@ -6,8 +6,7 @@ public class CapitalLetterValidator : IValidator
 {
     public Response Validate(string password)
     {
-
-        if (password.Any(char.IsUpper))
+        if (password is not null && password.Any(char.IsUpper))
         {
             return new Response(
                 true,

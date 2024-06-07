@@ -39,7 +39,7 @@ public class LenghtValidatorTests
     [Test]
     [TestCase("")]
     [TestCase(null)]
-    public void PasswordShouldntBeEmpyString(string password)
+    public void PasswordShouldntBeEmpyStringOrNull(string password)
     {
         var response = _sut.Validate(password);
 

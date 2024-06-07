@@ -37,5 +37,20 @@ namespace PasswordValidationTests
 
             Assert.That(invalidResponse, Is.EqualTo(response));
         }
+
+        [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        public void PasswordShouldntBeEmpyStringOrNull(string password)
+        {
+            var response = _sut.Validate(password);
+
+            var invalidPasswordResponse = new Response(
+                false,
+                "password must contain at least one capital letter"
+            );
+
+            Assert.That(invalidPasswordResponse, Is.EqualTo(response));
+        }
     }
 }

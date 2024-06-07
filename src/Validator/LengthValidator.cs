@@ -4,7 +4,7 @@ namespace Validator;
 
 public class LengthValidator : IValidator
 {
-    public Response Validate(string? password)
+    public Response Validate(string password)
     {
         if (password is not null && password.Length > 7)
         {
