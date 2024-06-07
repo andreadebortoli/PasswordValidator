@@ -9,12 +9,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<LengthValidator>();
+builder.Services.AddScoped<TwoNumbersValidator>();
+builder.Services.AddScoped<SpecialCharacterValidator>();
+builder.Services.AddScoped<CapitalLetterValidator>();
+
 builder.Services.AddScoped<IValidator>(sp => new ValidatorHandler(new List<IValidator>()
     {
-        new LengthValidator(),
-        new TwoNumbersValidator(),
-        new SpecialCharacterValidator(),
-        new CapitalLetterValidator()
+        sp.GetRequiredService<LengthValidator>(),
+        sp.GetRequiredService<TwoNumbersValidator>(),
+        sp.GetRequiredService<SpecialCharacterValidator>(),
+        sp.GetRequiredService<CapitalLetterValidator>(),
     }
 ));
 
