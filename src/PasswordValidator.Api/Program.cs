@@ -1,3 +1,5 @@
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Validator;
 using Validator.Interfaces;
@@ -9,16 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddKeyedScoped<IValidator, LenghtValidator>("length");
-builder.Services.AddKeyedScoped<IValidator, TwoNumbersValidator>("twoNumbers");
-builder.Services.AddKeyedScoped<IValidator, SpecialCharacterValidator>("specialCharacters");
-
-
-builder.Services.AddScoped<IResponseBuilder, ResponseBuilder>(serviceProvider =>
-    new ResponseBuilder(
-        serviceProvider.GetRequiredKeyedService<IValidator>("length"),
-        serviceProvider.GetRequiredKeyedService<IValidator>("twoNumbers"),
-        serviceProvider.GetRequiredKeyedService<IValidator>("specialCharacters")));
+builder.Services.AddScoped<IValidator>(sp => new ValidatorHandler(new List<IValidator>()
+    {
+        new LengthValidator(),
+        new TwoNumbersValidator(),
+        new SpecialCharacterValidator(),
+        new CapitalLetterValidator()
+    }
+));
 
 var app = builder.Build();
 
@@ -33,15 +33,10 @@ app.UseHttpsRedirection();
 
 
 app.MapGet("/validator", (
-        [FromServices] IResponseBuilder responseBuilder,
+        [FromServices] IValidator validator,
         string password) =>
     {
-        var result = responseBuilder
-            .ValidateLength(password)
-            .ValidateDigits(password)
-            .ValidateSpecialCharacters(password)
-            .Build();
-
+        var result = validator.Validate(password);
 
         return Results.Ok(result);
     })

@@ -4,32 +4,19 @@ namespace Validator;
 
 public class TwoNumbersValidator : IValidator
 {
-    public Response Validate(string? password)
+    public Response Validate(string password)
     {
-        if (password is null)
+        if (password.Count(char.IsDigit) >= 2)
         {
-            return new Response
-            {
-                IsValid = false,
-                Message = "Password cannot be null"
-            };
+            return new Response(
+                true,
+                string.Empty
+            );
         }
 
-        var numbersInPassword = password!.Where(c => char.IsDigit(c)).ToList();
-
-        if (numbersInPassword.Count < 2)
-        {
-            return new Response()
-            {
-                IsValid = false,
-                Message = "The password must contain at least 2 numbers"
-            };
-        }
-
-        return new Response()
-        {
-            IsValid = true,
-            Message = string.Empty
-        };
+        return new Response(
+                false,
+                $"The password must contain at least 2 numbers")
+            ;
     }
 }

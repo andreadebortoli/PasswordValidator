@@ -5,72 +5,49 @@ namespace PasswordValidationTests;
 
 public class LenghtValidatorTests
 {
-
     private IValidator _sut;
 
     [SetUp]
     public void Setup()
     {
-        _sut = new LenghtValidator();
+        _sut = new LengthValidator();
     }
 
     [Test]
-    public void PasswordMustBeAtLeastEightCharactersLong()
+    [TestCase("password")]
+    [TestCase("Password123")]
+    public void PasswordMustBeAtLeastEightCharactersLong(string password)
     {
-        var response = _sut.Validate("Password");
+        var response = _sut.Validate(password);
 
         Assert.True(response.IsValid);
     }
 
     [Test]
-    public void ReturnInvalidIfPasswordHasMoreThanEightCharacters()
+    [TestCase("passwo")]
+    public void PasswordShouldntBeShorterThanEightCharactersLong(string password)
     {
-        var response = _sut.Validate("Password123");
+        var response = _sut.Validate(password);
 
-        Assert.True(response.IsValid);
+        var invalidPasswordResponse = new Response(
+            false,
+            "Password must be at least 8 characters"
+        );
+        Assert.That(invalidPasswordResponse, Is.EqualTo(response));
     }
 
     [Test]
-    public void PasswordShouldntBeShorterThanEightCharactersLong()
+    [TestCase("")]
+    [TestCase(null)]
+    public void PasswordShouldntBeEmpyString(string password)
     {
-        var response = _sut.Validate("Passwo");
+        var response = _sut.Validate(password);
 
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "Password must be at least 8 characters"
-        };
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
-    }
+        var invalidPasswordResponse = new Response(
+            false,
+            "Password must be at least 8 characters"
+        );
 
-    [Test]
-    public void PasswordShouldntBeEmpyString()
-    {
-        var response = _sut.Validate(string.Empty);
-
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "Password must be at least 8 characters"
-        };
-
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
-    }
-
-    [Test]
-    public void PasswordShouldntBeNull()
-    {
-        var response = _sut.Validate(null);
-
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "Password cannot be null"
-        };
-
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
+        Assert.That(invalidPasswordResponse, Is.EqualTo(response));
     }
 }

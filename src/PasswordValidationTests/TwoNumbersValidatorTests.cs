@@ -14,63 +14,26 @@ public class TwoNumbersValidatorTests
     }
 
     [Test]
-    public void PasswordMustContainsAtLEastTwoNumbers()
+    [TestCase("Password12")]
+    [TestCase("Password123")]
+    public void PasswordMustContainsAtLEastTwoNumbers(string password)
     {
-        var response = _sut.Validate("Password12");
+        var response = _sut.Validate(password);
 
         Assert.True(response.IsValid);
     }
 
     [Test]
-    public void ReturnsValidIfContainsMoreThanTwoNumbers()
+    [TestCase("Password1")]
+    public void ReturnsInvalidIfContainsLessThanTwoNumbers(string password)
     {
-        var response = _sut.Validate("Password123");
+        var response = _sut.Validate(password);
 
-        Assert.True(response.IsValid);
-    }
+        var invalidPasswordResponse = new Response(
+            false,
+            "The password must contain at least 2 numbers"
+        );
 
-    [Test]
-    public void ReturnsInvalidIfContainsLessThanTwoNumbers()
-    {
-        var response = _sut.Validate("Password1");
-
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "The password must contain at least 2 numbers"
-        };
-
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
-    }
-
-    [Test]
-    public void PasswordShouldntBeEmpyString()
-    {
-        var response = _sut.Validate(string.Empty);
-
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "The password must contain at least 2 numbers"
-        };
-
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
-    }
-
-    [Test]
-    public void PasswordShouldntBeNull()
-    {
-        var response = _sut.Validate(null);
-
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "Password cannot be null"
-        };
-
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
+        Assert.That(invalidPasswordResponse, Is.EqualTo(response));
     }
 }

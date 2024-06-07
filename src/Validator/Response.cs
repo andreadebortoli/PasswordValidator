@@ -1,8 +1,8 @@
 ﻿namespace Validator
 {
-    public class Response
-    {
-        public bool IsValid { get; set; }
-        public string? Message { get; set; }
-    }
+    public record Response
+    (
+        bool IsValid,
+        string? Message
+    );
 }

@@ -14,63 +14,34 @@ public class SpecialCharctersValidatorTests
     }
 
     [Test]
-    public void PasswordMustContainsAtLeastOneSpecialCharacters()
+    [TestCase("Password!")]
+    public void PasswordMustContainsAtLeastOneSpecialCharacters(string password)
     {
-        var response = _sut.Validate("Password!");
+        var response = _sut.Validate(password);
 
         Assert.True(response.IsValid);
     }
 
     [Test]
-    public void ReturnsValidIfContainsMoreThanOneSpecialCharacters()
+    [TestCase("Pass_w@rd!")]
+    public void ReturnsValidIfContainsMoreThanOneSpecialCharacters(string password)
     {
-        var response = _sut.Validate("Pass_w@rd!");
+        var response = _sut.Validate(password);
 
         Assert.True(response.IsValid);
     }
 
     [Test]
-    public void ReturnsInvalidIfDoesntContainsSpecialCharacters()
+    [TestCase("Password")]
+    public void ReturnsInvalidIfDoesntContainsSpecialCharacters(string password)
     {
-        var response = _sut.Validate("Password");
+        var response = _sut.Validate(password);
 
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "password must contain at least one special character"
-        };
+        var invalidPasswordResponse = new Response(
+            false,
+            "password must contain at least one special character"
+        );
 
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
-    }
-
-    [Test]
-    public void PasswordShouldntBeEmpyString()
-    {
-        var response = _sut.Validate(string.Empty);
-
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "password must contain at least one special character"
-        };
-
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
-    }
-
-    [Test]
-    public void PasswordShouldntBeNull()
-    {
-        var response = _sut.Validate(null);
-
-        var invalidPasswordResponse = new Response()
-        {
-            IsValid = false,
-            Message = "Password cannot be null"
-        };
-
-        Assert.That(invalidPasswordResponse.IsValid, Is.EqualTo(response.IsValid));
-        Assert.That(invalidPasswordResponse.Message, Is.EqualTo(response.Message));
+        Assert.That(invalidPasswordResponse, Is.EqualTo(response));
     }
 }

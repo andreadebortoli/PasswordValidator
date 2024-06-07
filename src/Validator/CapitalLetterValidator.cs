@@ -2,11 +2,12 @@
 
 namespace Validator;
 
-public class SpecialCharacterValidator : IValidator
+public class CapitalLetterValidator : IValidator
 {
     public Response Validate(string password)
     {
-        if (password.Any(char.IsPunctuation) )
+
+        if (password.Any(char.IsUpper))
         {
             return new Response(
                 true,
@@ -16,7 +17,7 @@ public class SpecialCharacterValidator : IValidator
 
         return new Response(
             false,
-            $"password must contain at least one special character"
+            $"password must contain at least one capital letter"
         );
     }
 }
