@@ -2,6 +2,6 @@
 {
     public interface IValidator
     {
-        Response Validate(string? password);
+        public Response Validate(string? password);
     }
 }

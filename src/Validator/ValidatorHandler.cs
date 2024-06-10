@@ -2,13 +2,14 @@
 
 namespace Validator;
 
-public class ValidatorHandler : IValidator
+
+public class ValidatorHandler : IValidatorHandler
 {
-    private readonly List<IValidator> _validators;
+    private readonly IEnumerable<IValidator> _validators;
 
     public ValidatorHandler(IEnumerable<IValidator> validators)
     {
-        _validators = validators.ToList();
+        _validators = validators;
     }
 
     public Response Validate(string password)
