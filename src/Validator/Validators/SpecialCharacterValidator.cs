@@ -1,12 +1,12 @@
 ﻿using Validator.Interfaces;
 
-namespace Validator;
+namespace Validator.Validators;
 
-public class CapitalLetterValidator : IValidator
+public class SpecialCharacterValidator : IValidator
 {
     public Response Validate(string password)
     {
-        if (password is not null && password.Any(char.IsUpper))
+        if (password is not null && password.Any(char.IsPunctuation))
         {
             return new Response(
                 true,
@@ -16,7 +16,7 @@ public class CapitalLetterValidator : IValidator
 
         return new Response(
             false,
-            $"password must contain at least one capital letter"
+            $"password must contain at least one special character"
         );
     }
 }

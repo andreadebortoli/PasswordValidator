@@ -1,6 +1,6 @@
 ﻿using Validator.Interfaces;
 
-namespace Validator;
+namespace Validator.Validators;
 
 public class TwoNumbersValidator : IValidator
 {

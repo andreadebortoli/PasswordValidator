@@ -1,6 +1,7 @@
 ﻿using Common;
 using Microsoft.Extensions.DependencyInjection;
 using Validator;
+using Validator.Interfaces;
 
 namespace PasswordValidationTests;
 

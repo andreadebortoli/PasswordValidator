@@ -1,13 +1,11 @@
 ﻿using Validator.Interfaces;
-
 namespace Validator;
 
-
-public class ValidatorHandler : IValidatorHandler
+public class ValidatorsHandler : IValidatorHandler
 {
     private readonly IEnumerable<IValidator> _validators;
 
-    public ValidatorHandler(IEnumerable<IValidator> validators)
+    public ValidatorsHandler(IEnumerable<IValidator> validators)
     {
         _validators = validators;
     }
@@ -21,15 +19,12 @@ public class ValidatorHandler : IValidatorHandler
             var response = validator.Validate(password);
             if (!response.IsValid)
             {
-                errorMessages.Add(response.Message);
+                errorMessages.Add(response.Message!);
             }
         }
 
-        if (errorMessages.Any())
-        {
-            return new Response(false, string.Join(Environment.NewLine, errorMessages));
-        }
-
-        return new Response(true, string.Empty);
+        return errorMessages.Any()
+            ? new Response(false, string.Join(Environment.NewLine, errorMessages))
+            : new Response(true, string.Empty);
     }
 }

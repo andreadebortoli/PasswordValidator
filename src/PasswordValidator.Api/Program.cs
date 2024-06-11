@@ -1,6 +1,6 @@
 using Common;
+using FileHandler;
 using Microsoft.AspNetCore.Mvc;
-using Validator;
 using Validator.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.InizializeValidator();
+
+builder.Services.AddSingleton<IWriter, FileWriter>();
 
 var app = builder.Build();
 
@@ -26,11 +28,19 @@ app.UseHttpsRedirection();
 
 app.MapGet("/validator", (
         [FromServices] IValidatorHandler validator,
+        [FromServices] IWriter fileHandler,
         string password) =>
     {
         var result = validator.Validate(password);
 
-        return Results.Ok(result);
+        if (result.IsValid)
+        {
+            EncryptionHandler.EncryptionHandler.EncryptPassword(password);
+            fileHandler.WriteToFile(password);
+            return Results.Ok(result);
+        }
+
+        return Results.BadRequest(result);
     })
 .WithName("PasswordValidator")
 .WithOpenApi();

@@ -1,5 +1,6 @@
 ﻿using Validator;
 using Validator.Interfaces;
+using Validator.Validators;
 
 namespace PasswordValidationTests;
 
@@ -8,7 +9,7 @@ public class TwoNumbersValidatorTests
     private IValidator _sut;
 
     [SetUp]
-    public void Setup()
+    public void SetUp()
     {
         _sut = new TwoNumbersValidator();
     }

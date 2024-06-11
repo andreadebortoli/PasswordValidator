@@ -1,5 +1,6 @@
 ﻿using Validator;
 using Validator.Interfaces;
+using Validator.Validators;
 
 namespace PasswordValidationTests
 {
