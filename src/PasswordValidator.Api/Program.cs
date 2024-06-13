@@ -1,6 +1,9 @@
 using Common;
 using FileHandler;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using PasswordValidator.Api;
+using Validator;
 using Validator.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.Configure<FileHandlerOptions>(builder.Configuration.GetSection("FileHandler"));
+
 builder.Services.InizializeValidator();
 
-builder.Services.AddSingleton<IWriter, FileWriter>();
+builder.Services.AddSingleton<IWriter>(sp =>
+{
+    var options = sp.GetRequiredService<IOptions<FileHandlerOptions>>();
+    return new FileWriter(options.Value.Path, options.Value.FileName);
+});
+builder.Services.AddSingleton<IPasswordEncryptor, PasswordEncryptor>();
+builder.Services.AddScoped<IPasswordChecker, PasswordChecker>();
 
 var app = builder.Build();
 
@@ -25,22 +36,16 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
 app.MapGet("/validator", (
         [FromServices] IValidatorHandler validator,
-        [FromServices] IWriter fileHandler,
+        [FromServices] IPasswordChecker passwordChecker,
         string password) =>
     {
-        var result = validator.Validate(password);
+        var response = validator.Validate(password);
 
-        if (result.IsValid)
-        {
-            EncryptionHandler.EncryptionHandler.EncryptPassword(password);
-            fileHandler.WriteToFile(password);
-            return Results.Ok(result);
-        }
+        passwordChecker.CheckPassword(response.IsValid, password);
 
-        return Results.BadRequest(result);
+        return Results.Ok(response);
     })
 .WithName("PasswordValidator")
 .WithOpenApi();

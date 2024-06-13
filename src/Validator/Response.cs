@@ -3,6 +3,6 @@
     public record Response
     (
         bool IsValid,
-        string? Message
+        string Message
     );
 }
